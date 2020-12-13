@@ -1,0 +1,13 @@
+*.db
+*.log
+/target
+/bin
+
+*/**/.idea/
+*/**/target
+*/**/out/
+*/**/bin/
+*/**/obj/
+*/**/*.iml
+*/**/*.json
+*/**/*.csproj
