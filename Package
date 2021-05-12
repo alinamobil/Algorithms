@@ -1,0 +1,98 @@
+
+import numpy as np
+import random
+
+vec = np.array([random.random() for i in range(10000)])
+
+#########################################################
+## NF
+#########################################################
+
+A = [0]
+
+for k in range(len(vec)):
+    if (vec[k] + A[-1] <= 1):
+        A[-1] += vec[k]
+    else:
+        A.append(vec[k]);
+#    if (k%1000==0): print("k = {}".format(k))
+
+print("NF cells number = {}".format(len(A)))
+
+#########################################################
+## FF
+#########################################################
+
+A = [0]
+counter = 0
+
+for k in range(len(vec)):
+    for i in range(len(A)):
+        if (vec[k] + A[i] <= 1):
+            A[i] += vec[k]
+            if (A[i] > 0.950):
+                A.pop(i)
+                if len(A) == 0: A = [0]
+                counter += 1
+            break
+
+        elif (i == len(A) - 1):
+            A.append(vec[k])
+            if (A[-1] > 0.950):
+                A.pop(-1)
+                if len(A) == 0: A = [0]
+                counter += 1;
+#   if (k%1000==0): print("k = {}".format(k))
+
+print("FF cells number = {}".format(len(A) + counter))
+
+#########################################################
+## BF
+#########################################################
+
+A = [0]
+counter = 0
+
+maxList = []
+
+for k in range(len(vec)):
+    for i in range(len(A)):
+        if (vec[k] + A[i] <= 1):
+            if (len(maxList) == 0):
+                maxList = [1 - vec[k] - A[i], i]
+            elif (maxList[0] > (1 - vec[k] - A[i])):
+                maxList = [1 - (vec[k] + A[i]), i]
+        if (i == len(A) - 1):
+            if (len(maxList) == 0):
+                A.append(vec[k])
+                if (A[-1] > 0.950):
+                    A.pop(-1)
+                    if len(A) == 0: A = [0]
+                    counter += 1
+            else:
+                A[maxList[1]] += vec[k]
+                if (A[maxList[1]] > 0.950):
+                    A.pop(maxList[1])
+                    if len(A) == 0: A = [0]
+                    counter += 1
+                maxList = [];
+#    if (k%1000==0): print("k = {}".format(k))
+
+print("BF cells number = {}".format(len(A) + counter))
+
+#########################################################
+## FFD
+#########################################################
+
+vec = np.sort(vec)
+
+A = [0]
+
+for k in range(len(vec)):
+    if (vec[k] + A[-1] >= 1):
+        A.append(vec[k])
+    else:
+        A[-1] += vec[k];
+#    if (k%1000==0): print("k = {}".format(k))
+
+print("FFD cells number = {}".format(len(A)))
